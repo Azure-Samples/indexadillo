@@ -6,6 +6,10 @@
   },
   "extensions": {
     "durableTask": {
+      "hubName": "indexadillohub",
+      "storageProvider": {
+        "partitionCount": 4
+      },
       "tracing": {
         "DistributedTracingEnabled": true,
         "Version": "V2"
