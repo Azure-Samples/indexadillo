@@ -14,6 +14,9 @@ param diEndpoint string
 param openAIEndpoint string
 param searchServiceName string
 param appInsightsName string
+param dtsURL string
+param dtsName string
+param taskHubName string
 
 resource sourceStorageAccount 'Microsoft.Storage/storageAccounts@2023-01-01' existing = {
   name: sourceStorageAccountName
@@ -33,6 +36,10 @@ resource searchService 'Microsoft.Search/searchServices@2023-11-01' existing = {
 
 resource appInsights 'Microsoft.Insights/components@2020-02-02' existing = {
   name: appInsightsName
+}
+
+resource dts 'Microsoft.DurableTask/schedulers@2024-10-01-preview' existing = {
+  name: dtsName
 }
 
 
@@ -106,6 +113,8 @@ resource flexFunctionApp 'Microsoft.Web/sites@2023-12-01' = {
       DI_ENDPOINT: diEndpoint
       AZURE_OPENAI_ENDPOINT: openAIEndpoint
       SEARCH_SERVICE_ENDPOINT: searchServiceEndpoint
+      DTS_CONNECTION_STRING: 'Endpoint=${dtsURL};Authentication=ManagedIdentity;ClientID=${identityClientId}'
+      TASKHUB_NAME: taskHubName
     }
   }
 }
@@ -207,6 +216,16 @@ resource searchIndexDataContributorRoleAssignment 'Microsoft.Authorization/roleA
     roleDefinitionId: resourceId('Microsoft.Authorization/roleDefinitions', '8ebe5a00-799e-43f5-93ac-243d3dce84a7')
     principalId: principalID
     principalType: 'ServicePrincipal'
+  }
+}
+
+resource dtsRoleAssignment 'Microsoft.Authorization/roleAssignments@2020-04-01-preview' = {
+  name: guid(dts.id, principalID, '0ad04412-c4d5-4796-b79c-f76d14c8d402' )
+  scope: dts
+  properties: {
+   roleDefinitionId: resourceId('Microsoft.Authorization/roleDefinitions', '0ad04412-c4d5-4796-b79c-f76d14c8d402' )
+   principalId: principalID
+   principalType: 'ServicePrincipal'
   }
 }
 

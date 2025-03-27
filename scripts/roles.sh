@@ -60,6 +60,7 @@ roles=(
     "a97b65f3-24c7-4388-baec-2e87135dc908" # Cognitive Services User
     "0a9a7e1f-b9d0-4cc4-a60d-0319b160aaa3" # Storage Table Data Contributor
     "974c5e8b-45b9-4653-ba55-5f855dd0fb88" # Storage Queue Data Contributor
+    "0ad04412-c4d5-4796-b79c-f76d14c8d402" # Durable Task Scheduler Dashboard User
 )
 
 if [ -z "$AZURE_RESOURCE_GROUP" ]; then

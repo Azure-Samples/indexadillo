@@ -92,6 +92,22 @@ module appInsights 'core/application_insights/application_insights_service.bicep
   }
 }
 
+module dts 'core/durable_task_scheduler/durable_task_scheduler.bicep' = {
+  scope: resourceGroup
+  name: 'dtsResource'
+  params: {
+    name: '${abbrs.dts}${resourceToken}'
+    taskhubname: '${abbrs.taskhub}${resourceToken}'
+    location: location
+    tags: tags
+    ipAllowlist: [
+      '0.0.0.0/0'
+    ]
+    skuName: 'Dedicated'
+    skuCapacity: 1
+  }
+}
+
 module flexFunction 'core/host/function.bicep' = {
   name: 'functionapp'
   scope: resourceGroup
@@ -112,6 +128,9 @@ module flexFunction 'core/host/function.bicep' = {
     diEndpoint: documentIntelligence.outputs.endpoint
     openAIEndpoint: openAI.outputs.endpoint
     searchServiceName: searchService.outputs.name
+    dtsURL: dts.outputs.dts_URL
+    taskHubName: dts.outputs.TASKHUB_NAME
+    dtsName: dts.outputs.dts_NAME
   }
 }
 
