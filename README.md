@@ -78,7 +78,12 @@ parsing your documents to uploading embeddings—without restarting at every lit
      - Check the processing in Application Insights:
        ![App Insights](assets/application_insights.png)
      - Or view the function app’s invocations by selecting the `index_event_grid` function and switching to the "Invocations" tab.
-   - **Accessing Search:** Use the AI Search portal or the provided [Bruno collection](https://www.usebruno.com/) in the `/http` folder. (Don’t forget to update the `host` variable in the collection settings with your function app name.)
+   - **Accessing Search:** Use the AI Search portal or the provided [Bruno collection](https://www.usebruno.com/) in the `/http` folder.
+      You can also clone/import the collection just by clicking the button below:
+
+     [<img src="https://fetch.usebruno.com/button.svg" alt="Fetch in Bruno" style="width: 130px; height: 30px;" width="128" height="32">](https://fetch.usebruno.com?url=https%3A%2F%2Fgithub.com%2FAzure-Samples%2Findexadillo "target=_blank rel=noopener noreferrer")
+
+      (Don’t forget to update the `host` variable in the collection settings with your function app name.)
    - **Reindexing:** Trigger a full reindex via the `/index` endpoint. This creates a new index (defaulted to `other-index`, can
      be changed in the parameters) for the blobs. You can adjust the prefixes to index specific folders, and the endpoint returns an ID to track progress
      via `/status/:id`.
