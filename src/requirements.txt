@@ -11,7 +11,7 @@ attrs==24.3.0
 autotiktokenizer==0.2.2
 azure-ai-documentintelligence==1.0.0b4
 azure-common==1.1.28
-azure-core==1.32.0
+azure-core==1.38.0
 azure-functions==1.21.3
 azure-functions-durable==1.2.10
 azure-identity==1.19.0
