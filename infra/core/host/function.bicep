@@ -14,6 +14,8 @@ param diEndpoint string
 param openAIEndpoint string
 param searchServiceName string
 param appInsightsName string
+param dtsURL string = ''
+param taskHubName string = ''
 
 resource sourceStorageAccount 'Microsoft.Storage/storageAccounts@2023-01-01' existing = {
   name: sourceStorageAccountName
@@ -106,6 +108,8 @@ resource flexFunctionApp 'Microsoft.Web/sites@2023-12-01' = {
       DI_ENDPOINT: diEndpoint
       AZURE_OPENAI_ENDPOINT: openAIEndpoint
       SEARCH_SERVICE_ENDPOINT: searchServiceEndpoint
+      DURABLE_TASK_SCHEDULER_CONNECTION_STRING: 'Endpoint=${dtsURL};Authentication=ManagedIdentity;ClientID=${identityClientId}'
+      TASKHUB_NAME: taskHubName
     }
   }
 }
