@@ -15,6 +15,7 @@ resource storageAccount 'Microsoft.Storage/storageAccounts@2022-05-01' = {
     accessTier: 'Hot'
     allowBlobPublicAccess: false
     allowCrossTenantReplication: false
+    allowSharedKeyAccess: false
     supportsHttpsTrafficOnly: true
     defaultToOAuthAuthentication: true
     minimumTlsVersion: 'TLS1_2'
