@@ -5,7 +5,7 @@ aiohappyeyeballs==2.4.4
 aiohttp==3.11.11
 aiosignal==1.3.2
 annotated-types==0.7.0
-anyio==4.8.0
+anyio==4.14.2
 async-timeout==5.0.1
 attrs==24.3.0
 autotiktokenizer==0.2.2
