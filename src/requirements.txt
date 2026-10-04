@@ -48,7 +48,7 @@ propcache==0.2.1
 pycparser==2.22
 pydantic==2.10.5
 pydantic_core==2.27.2
-PyJWT==2.10.1
+PyJWT==2.15.0
 python-dateutil==2.9.0.post0
 PyYAML==6.0.2
 regex==2024.11.6
