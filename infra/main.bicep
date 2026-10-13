@@ -3,12 +3,23 @@ targetScope = 'subscription'
 param environmentName string
 param location string
 
+param dtsName string = ''
+param taskHubName string = ''
+param dtsLocation string = location
+param dtsSkuName string = 'Consumption'
+param dtsCapacity int = 0
+
+@description('Id of the user identity to be used for testing and debugging. This is not required in production. Leave empty if not needed.')
+param principalId string = ''
+
 var abbrs = loadJsonContent('./abbreviations.json')
 
 var resourceToken = toLower(uniqueString(subscription().id, environmentName, location))
 
 var functionAppName = '${abbrs.webSitesFunctions}${resourceToken}'
 var functionContainerName = 'app-package-${functionAppName}'
+var dtsResourceName = !empty(dtsName) ? dtsName : '${abbrs.durableTaskSchedulers}${resourceToken}'
+var taskHubResourceName = !empty(taskHubName) ? taskHubName : '${abbrs.durableTaskHubs}${resourceToken}'
 
 var tags = { 'azd-env-name': environmentName }
 
@@ -112,6 +123,8 @@ module flexFunction 'core/host/function.bicep' = {
     diEndpoint: documentIntelligence.outputs.endpoint
     openAIEndpoint: openAI.outputs.endpoint
     searchServiceName: searchService.outputs.name
+    dtsURL: dts.outputs.dts_URL
+    taskHubName: dts.outputs.TASKHUB_NAME
   }
 }
 
@@ -127,6 +140,50 @@ module eventgrid 'core/integration/eventgrid.bicep' = {
 }
 
 output SOURCE_STORAGE_ACCOUNT_NAME string = storage[0].outputs.storageAccountName
+
+// Durable Task Scheduler
+module dts 'core/durable_task/dts.bicep' = {
+  scope: resourceGroup
+  name: 'dtsResource'
+  params: {
+    name: dtsResourceName
+    taskhubname: taskHubResourceName
+    location: dtsLocation
+    tags: tags
+    ipAllowlist: [
+      '0.0.0.0/0'
+    ]
+    skuName: dtsSkuName
+    skuCapacity: dtsCapacity
+  }
+}
+
+// Durable Task Data Contributor role ID
+var dtsRoleDefinitionId = '0ad04412-c4d5-4796-b79c-f76d14c8d402'
+
+// Allow access from function app to DTS using user assigned managed identity
+module dtsRoleAssignment 'core/durable_task/dts-access.bicep' = {
+  name: 'dtsRoleAssignment'
+  scope: resourceGroup
+  params: {
+    roleDefinitionID: dtsRoleDefinitionId
+    principalID: userAssignedIdentity.outputs.identityPrincipalId
+    principalType: 'ServicePrincipal'
+    dtsName: dts.outputs.dts_NAME
+  }
+}
+
+// Allow the deployer identity to access the DTS dashboard
+module dtsDashboardRoleAssignment 'core/durable_task/dts-access.bicep' = if (!empty(principalId)) {
+  name: 'dtsDashboardRoleAssignment'
+  scope: resourceGroup
+  params: {
+    roleDefinitionID: dtsRoleDefinitionId
+    principalID: principalId
+    principalType: 'User'
+    dtsName: dts.outputs.dts_NAME
+  }
+}
 
 output RESOURCE_GROUP_NAME string = resourceGroup.name
 output SYSTEM_TOPIC_NAME string = eventgrid.outputs.systemTopicName

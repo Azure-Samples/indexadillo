@@ -1,14 +1,20 @@
 {
   "version": "2.0",
+  "logging": {
+    "logLevel": {
+      "DurableTask.AzureManagedBackend": "Information"
+    }
+  },
   "extensionBundle": {
     "id": "Microsoft.Azure.Functions.ExtensionBundle",
     "version": "[4.*, 5.0.0)"
   },
   "extensions": {
     "durableTask": {
-      "tracing": {
-        "DistributedTracingEnabled": true,
-        "Version": "V2"
+      "hubName": "%TASKHUB_NAME%",
+      "storageProvider": {
+        "type": "azureManaged",
+        "connectionStringName": "DURABLE_TASK_SCHEDULER_CONNECTION_STRING"
       }
     }
   }
