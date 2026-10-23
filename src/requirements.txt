@@ -17,7 +17,7 @@ azure-functions-durable==1.2.10
 azure-identity==1.19.0
 azure-search-documents==11.6.0b6
 azure-storage-blob==12.24.0
-certifi==2024.12.14
+certifi==2026.10.19
 cffi==1.17.1
 charset-normalizer==3.4.0
 chonkie==0.4.1
